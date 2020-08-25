@@ -90,11 +90,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	{
 		for (int j=0;j<3;j++)
 		{
-			map[i][j] = STONE_MAX;
+			map[i][j] =STONE_MAX;
 		}
 	}
 	//　二次元配列mapの全要素を STONE_MAX で初期化する
-
 	// ゲームのメインループ
 	// 画面を１回表示する毎にwhile分を１回処理する
 	// ----------------------------------------------------
@@ -112,7 +111,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		winner=CheckWinner();
 		// --- 入力状況をチェックして、適切な処理を行う
 		// 決着がついてない時だけ入力を受け付けるように if文 でチェックする
-		if( WINNER_NON )
+		if(winner==WINNER_NON )
 		{
 				// 上下左右の入力があった時の処理
 
@@ -120,21 +119,37 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				{
 				
 					pos_y--;			//※※ pos_yの値を 1 減らす
+					if (pos_y < 0)
+					{
+						pos_y = 0;
+					}
 				}
 				else if (IsPushKey(MY_INPUT_DOWN))
 				{
 					
 					pos_y++;			//※※ pos_yの値を 1 増やす
+					if (pos_y>2)
+					{
+						pos_y = 2;
+					}
 				}
 				else if (IsPushKey(MY_INPUT_LEFT))
 				{
 					
 					pos_x--;			//※※ pos_xの値を 1 減らす
+					if (pos_x<0)
+					{
+						pos_x = 0;
+					}
 				}
 				else if (IsPushKey(MY_INPUT_RIGHT))
 				{
 			
 					pos_x++;			//※※ pos_xの値を 1 増やす
+					if (pos_x>2)
+					{
+						pos_x = 2;
+					}
 				}
 
 			// 決定(=エンターキー)が押された時の処理
@@ -162,9 +177,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 		// 以下、描画処理
 		// ----------------------------------------------------
+		 DrawInit();
 		 DrawInformation(turn); //※※　// 情報文章を描画
 		 DrawGameClear(winner); //※※　// ゲームクリアの文字を描画
-		 DrawBgLine();			//※※　// 枠線を描画
+		 DrawBgLine();
+		
+		 //※※　// 枠線を描画
 			for (int i=0;i<3;i++)
 			{
 				for (int j=0;j<3;j++)
@@ -222,50 +240,71 @@ bool IsPutStone( int x, int y )
 // ==============================
 int CheckWinner()
 {
-	for (int i = 0; i < 3; i++)
+	int CheckStone = 0;
+	
+	if (map[0][0] == STONE_WHITE)
 	{
-		if (map[i][0] == STONE_WHITE)    
+		if (map[0][1] == STONE_WHITE)
 		{
-			if (map[i][1] == STONE_WHITE)
+			if (map[0][2] == STONE_WHITE)
 			{
-				if (map[i][2] == STONE_WHITE)
-				{
-					return WINNER_WHITE;
-				}
+				return WINNER_WHITE;
 			}
 		}
-		if (map[i][0] == STONE_BLACK)    
-		{
-			if (map[i][1] == STONE_BLACK)
-			{
-				if (map[i][2] == STONE_BLACK)
-				{
-					return WINNER_BLACK;
-				}
-			}
-		}
+	}
 
-		if (map[0][i] == STONE_WHITE)    
+	if (map[1][0] == STONE_WHITE)
+	{
+		if (map[1][1] == STONE_WHITE)
 		{
-			if (map[1][i] == STONE_WHITE)
+			if (map[1][2] == STONE_WHITE)
 			{
-				if (map[2][i] == STONE_WHITE)
-				{
-					return WINNER_WHITE;
-				}
+				return WINNER_WHITE;
 			}
 		}
-		if (map[0][i] == STONE_BLACK)    
+	}
+
+	if (map[2][0] == STONE_WHITE)
+	{
+		if (map[2][1] == STONE_WHITE)
 		{
-			if (map[1][i] == STONE_BLACK)
+			if (map[2][2] == STONE_WHITE)
 			{
-				if (map[2][i] == STONE_BLACK)
-				{
-					return WINNER_BLACK;
-				}
+				return WINNER_WHITE;
 			}
 		}
-		if (map[0][0] == STONE_WHITE)    
+	}
+	if (map[0][0] == STONE_WHITE)
+	{
+		if (map[1][0] == STONE_WHITE)
+		{
+			if (map[2][0] == STONE_WHITE)
+			{
+				return WINNER_WHITE;
+			}
+		}
+	}
+	if (map[0][1] == STONE_WHITE)
+	{
+		if (map[1][1] == STONE_WHITE)
+		{
+			if (map[2][1] == STONE_WHITE)
+			{
+				return WINNER_WHITE;
+			}
+		}
+	}
+	if (map[0][2] == STONE_WHITE)
+	{
+		if (map[1][2] == STONE_WHITE)
+		{
+			if (map[2][2] == STONE_WHITE)
+			{
+				return WINNER_WHITE;
+			}
+		}
+	}
+		if (map[0][0] == STONE_WHITE )    
 		{
 			if (map[1][1] == STONE_WHITE)
 			{
@@ -275,7 +314,77 @@ int CheckWinner()
 				}
 			}
 		}
-		if (map[0][0] == STONE_BLACK)   
+		
+		if (map[0][2]==STONE_WHITE)    
+		{
+			if (map[1][1] == STONE_WHITE)
+			{
+				if (map[2][0]==STONE_WHITE)
+				{
+					return WINNER_WHITE;
+				}
+			}
+		}
+		if (map[0][0] == STONE_BLACK)
+		{
+			if (map[0][1] == STONE_BLACK)
+			{
+				if (map[0][2] == STONE_BLACK)
+				{
+					return WINNER_BLACK;
+				}
+			}
+		}if (map[1][0] == STONE_BLACK)
+		{
+			if (map[1][1] == STONE_BLACK)
+			{
+				if (map[1][2] == STONE_BLACK)
+				{
+					return WINNER_BLACK;
+				}
+			}
+		}
+		if (map[2][0] == STONE_BLACK)
+		{
+			if (map[2][1] == STONE_BLACK)
+			{
+				if (map[2][2] == STONE_BLACK)
+				{
+					return WINNER_BLACK;
+				}
+			}
+		}
+		if (map[0][0] == STONE_BLACK)
+		{
+			if (map[1][0] == STONE_BLACK)
+			{
+				if (map[2][0] == STONE_BLACK)
+				{
+					return WINNER_BLACK;
+				}
+			}
+		}
+		if (map[0][1] == STONE_BLACK)
+		{
+			if (map[1][1] == STONE_BLACK)
+			{
+				if (map[2][1] == STONE_BLACK)
+				{
+					return WINNER_BLACK;
+				}
+			}
+		}
+		if (map[0][2] == STONE_BLACK)
+		{
+			if (map[1][2] == STONE_BLACK)
+			{
+				if (map[2][2] == STONE_BLACK)
+				{
+					return WINNER_BLACK;
+				}
+			}
+		}
+		if (map[0][0] == STONE_BLACK)    
 		{
 			if (map[1][1] == STONE_BLACK)
 			{
@@ -285,48 +394,39 @@ int CheckWinner()
 				}
 			}
 		}
-
-		if (map[0][2] == STONE_WHITE)   
-		{
-			if (map[1][1] == STONE_WHITE)
-			{
-				if (map[2][0] == STONE_WHITE)
-				{
-					return WINNER_WHITE;
-				}
-			}
-		}
-		if (map[0][2] == STONE_BLACK)    
+		
+		if ( map[0][2] == STONE_BLACK)
 		{
 			if (map[1][1] == STONE_BLACK)
 			{
-				if (map[2][0] == STONE_BLACK)
+				if ( map[2][0] == STONE_BLACK)
 				{
 					return WINNER_BLACK;
 				}
 			}
 		}
-	}
+	
 	//※※　以下の処理を実装する
 		// 縦、横、斜めが同じ石かどうかを調べる
 		// STONE_WHITE, STONE_BLACK, STONE_MAXを上手く使いましょう
-
 		// もし、まだ揃っていなかったら、盤面に置かれている石の数を調べる
 		// 全てのマスに石が置かれていたら引き分け
-	for(int i=0;i<3;i++) 
+	for (int i=0;i<3;i++)
 	{
 		for (int j=0;j<3;j++)
 		{
-				if (map[i][j] == STONE_MAX)
-				{
-					return WINNER_NON;
-				}
-				else if (map[i][j] != STONE_MAX)
-				{
-					return WINNER_DRAW;
-				}
+			if (map[i][j] != STONE_MAX)
+			{
+				CheckStone++;
+			}
 		}
 	}
+	if (CheckStone == 9)
+	{
+		return WINNER_DRAW;
+	}
+	return WINNER_NON;
+	
 	
 	// 上記のいずれかでも無かったらWINNER_NONを返す
 }
